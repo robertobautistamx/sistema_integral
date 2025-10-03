@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "392242492343",
+    "project_id": "sistema-integral-2f2c5",
+    "storage_bucket": "sistema-integral-2f2c5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392242492343:android:bddcd1129a51a209b2ee32",
+        "android_client_info": {
+          "package_name": "com.example.sistema_integral"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "392242492343-4phvhfti6i21p73bb9l9eo4odqg5c5s4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3m1e3Ta_YVCZH0TVtXnpvX0jK9G5tWdM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "392242492343-4phvhfti6i21p73bb9l9eo4odqg5c5s4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
