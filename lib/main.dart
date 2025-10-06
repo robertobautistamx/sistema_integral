@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:sistema_integral/Vista/login_pagina.dart';
 import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,13 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Prueba Firebase',
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Conexión Firebase')),
-        body: const Center(
-          child: Text('✅ Conectado a Firebase', style: TextStyle(fontSize: 24)),
-        ),
+      title: 'Sistema Integral',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
+      home: const Login(),
       debugShowCheckedModeBanner: false,
     );
   }
