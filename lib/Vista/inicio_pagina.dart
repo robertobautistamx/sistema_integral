@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sistema_integral/Vista/registro_glucosa_pagina.dart';
 import 'login_pagina.dart';
 import 'seguimiento_pagina.dart';
 import '../Controlador/login_controller.dart';
@@ -180,7 +181,8 @@ class _InicioPaginaState extends State<InicioPagina> {
                         () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const SeguimientoPagina(),
+                            builder:
+                                (_) => RegistroGlucosaPagina(uid: widget.uid),
                           ),
                         ),
                   ),
