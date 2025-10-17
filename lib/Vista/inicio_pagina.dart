@@ -11,6 +11,7 @@ import 'perfil_pagina.dart';
 import 'configuracion_pagina.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../Controlador/login_controller.dart';
+import 'tutorial_pagina.dart';
 
 class InicioPagina extends StatefulWidget {
   final String uid;
@@ -349,7 +350,12 @@ class _InicioPaginaState extends State<InicioPagina> {
                         'Tutorial',
                         'Aprende a usar la app',
                         Colors.deepPurple,
-                        () {},
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const TutorialPagina(),
+                          ),
+                        ),
                       ),
                     ];
                     return SingleChildScrollView(

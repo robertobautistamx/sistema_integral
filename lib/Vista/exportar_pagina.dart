@@ -7,6 +7,7 @@ import '../Controlador/registro_controller.dart';
 import '../Modelo/registro.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import '../Servicios/activity_service.dart';
 
 class ExportarPagina extends StatefulWidget {
   final String uid;
@@ -168,6 +169,12 @@ class _ExportarPaginaState extends State<ExportarPagina> {
                               await Printing.sharePdf(
                                 bytes: pdf,
                                 filename: 'registros_glucosa.pdf',
+                              );
+                              await ActivityService.logActivity(
+                                uid: widget.uid,
+                                tipo: 'export',
+                                title: 'Exportó PDF',
+                                detail: 'Exportación de registros',
                               );
                             } catch (e) {
                               _showPrintError(context, e);
