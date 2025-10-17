@@ -46,6 +46,33 @@ class LoginController {
     }
   }
 
+  // Registro con correo + nombre/apellido y creación del doc en Firestore
+  Future<UsuarioModelo?> registrarConCorreo(
+    String nombre,
+    String apellido,
+    String correo,
+    String contrasena,
+  ) async {
+    try {
+      final UserCredential resultado = await _auth
+          .createUserWithEmailAndPassword(email: correo, password: contrasena);
+      final User user = resultado.user!;
+      final docRef = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid);
+      await docRef.set({
+        'nombre':
+            '${nombre.trim()}${apellido.trim().isNotEmpty ? ' ${apellido.trim()}' : ''}',
+        'correo': correo,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      return UsuarioModelo(uid: user.uid, correo: user.email!);
+    } catch (e) {
+      print("Error registrarConCorreo: $e");
+      return null;
+    }
+  }
+
   // Recuperar contraseña
   Future<void> recuperarContrasena(String correo) async {
     try {

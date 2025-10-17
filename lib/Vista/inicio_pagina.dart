@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sistema_integral/Vista/historial_pagina.dart';
+import 'package:sistema_integral/Vista/login_pagina.dart';
 import 'package:sistema_integral/Vista/registro_glucosa_pagina.dart';
+import 'package:sistema_integral/Vista/expediente_pagina.dart';
+import 'perfil_pagina.dart';
+import 'configuracion_pagina.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../Controlador/login_controller.dart';
 
 class InicioPagina extends StatefulWidget {
@@ -152,31 +157,38 @@ class _InicioPaginaState extends State<InicioPagina> {
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Perfil'),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const PerfilPagina()),
+                );
+              },
             ),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Configuración'),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const ConfiguracionPagina(),
+                  ),
+                );
+              },
             ),
             const Divider(),
-            Builder(
-              builder: (ctx) {
-                final LoginController _loginController = LoginController();
-                return ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: const Text('Cerrar sesión'),
-                  onTap: () async {
-                    await _loginController.cerrarSesion();
-                    if (!mounted) return;
-                    Navigator.pop(ctx);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const RegistroGlucosaPagina(uid: ''),
-                      ),
-                    ); // ajusta si tienes login
-                  },
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Cerrar sesión'),
+              onTap: () async {
+                Navigator.pop(context);
+                await FirebaseAuth.instance.signOut();
+                // navega al login (ajusta si tu widget de login tiene otro nombre)
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const Login()),
                 );
               },
             ),
@@ -323,7 +335,14 @@ class _InicioPaginaState extends State<InicioPagina> {
                         'Expediente',
                         'Acceso a recursos',
                         Colors.teal,
-                        () {},
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ExpedientePagina(uid: widget.uid),
+                            ),
+                          );
+                        },
                       ),
                       _ModuleDescriptor(
                         Icons.school,
