@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../Controlador/registro_controller.dart';
 import '../Modelo/registro.dart';
 import 'registro_glucosa_pagina.dart';
+import 'historial_pagina.dart';
 
 class SeguimientoPagina extends StatefulWidget {
   final String uid;
@@ -65,6 +66,19 @@ class _SeguimientoPaginaState extends State<SeguimientoPagina> {
       appBar: AppBar(
         title: const Text('Seguimiento de Glucosa'),
         backgroundColor: const Color(0xFF4090CD),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => HistorialPagina(uid: widget.uid),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),

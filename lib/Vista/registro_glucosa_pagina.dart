@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../Controlador/registro_controller.dart';
 import '../Modelo/registro.dart';
 
@@ -144,12 +145,39 @@ class _RegistroGlucosaPaginaState extends State<RegistroGlucosaPagina> {
     return Scaffold(
       backgroundColor: _fondo,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: _azulPrincipal,
-        title: const Text('Registrar Glucosa'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () => Navigator.pop(context),
+        elevation: 2,
+        backgroundColor: const Color(0xFF3F84D4),
+        centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              splashFactory: NoSplash.splashFactory,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+              enableFeedback: false,
+              splashRadius: 20,
+            ),
+          ),
+        ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.opacity, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              'Registrar Glucosa',
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
       body: SafeArea(

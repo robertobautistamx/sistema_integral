@@ -107,4 +107,29 @@ class RegistroController {
       }).toList();
     });
   }
+
+  Future<List<Registro>> fetchRegistros({int limit = 100}) async {
+    final col = _usersRef
+        .doc(uid)
+        .collection('registros')
+        .orderBy('fecha', descending: true)
+        .limit(limit);
+    final snap = await col.get();
+    return snap.docs
+        .map(
+          (d) =>
+              Registro.fromFirestoreDoc(d.data() as Map<String, dynamic>, d.id),
+        )
+        .toList();
+  }
+
+  // Eliminar un registro por id (Firestore)
+  Future<bool> deleteRegistro(String id) async {
+    try {
+      await _usersRef.doc(uid).collection('registros').doc(id).delete();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
