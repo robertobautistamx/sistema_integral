@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Modelo/usuario.dart';
+import '../Servicios/activity_service.dart';
 
 class LoginController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,6 +24,12 @@ class LoginController {
         password: contrasena,
       );
       final User user = resultado.user!;
+      await ActivityService.logActivity(
+        uid: user.uid,
+        tipo: 'login',
+        title: 'Inicio de sesión',
+        detail: 'Inicio con correo',
+      );
       return UsuarioModelo(uid: user.uid, correo: user.email!);
     } catch (e) {
       print("Error login correo: $e");
@@ -42,6 +49,39 @@ class LoginController {
       return UsuarioModelo(uid: user.uid, correo: user.email!);
     } catch (e) {
       print("Error registro usuario: $e");
+      return null;
+    }
+  }
+
+  // Registro con correo + nombre/apellido y creación del doc en Firestore
+  Future<UsuarioModelo?> registrarConCorreo(
+    String nombre,
+    String apellido,
+    String correo,
+    String contrasena,
+  ) async {
+    try {
+      final UserCredential resultado = await _auth
+          .createUserWithEmailAndPassword(email: correo, password: contrasena);
+      final User user = resultado.user!;
+      final docRef = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid);
+      await docRef.set({
+        'nombre':
+            '${nombre.trim()}${apellido.trim().isNotEmpty ? ' ${apellido.trim()}' : ''}',
+        'correo': correo,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      await ActivityService.logActivity(
+        uid: user.uid,
+        tipo: 'registro',
+        title: 'Registro',
+        detail: 'Cuenta creada',
+      );
+      return UsuarioModelo(uid: user.uid, correo: user.email!);
+    } catch (e) {
+      print("Error registrarConCorreo: $e");
       return null;
     }
   }
@@ -94,7 +134,12 @@ class LoginController {
             // Puedes agregar más campos si quieres
           });
         }
-
+        await ActivityService.logActivity(
+          uid: user.uid,
+          tipo: 'login',
+          title: 'Inicio de sesión (Google)',
+          detail: 'Inicio con Google',
+        );
         return UsuarioModelo(uid: user.uid, correo: user.email!);
       }
       return null;

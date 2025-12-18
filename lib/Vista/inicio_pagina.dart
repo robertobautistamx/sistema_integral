@@ -2,12 +2,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'login_pagina.dart';
-import 'seguimiento_pagina.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:sistema_integral/Vista/historial_pagina.dart';
+import 'package:sistema_integral/Vista/login_pagina.dart';
+import 'package:sistema_integral/Vista/registro_glucosa_pagina.dart';
+import 'package:sistema_integral/Vista/expediente_pagina.dart';
+import 'perfil_pagina.dart';
+import 'configuracion_pagina.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../Controlador/login_controller.dart';
+import 'tutorial_pagina.dart';
 
 class InicioPagina extends StatefulWidget {
-  final String uid; // El UID del usuario autenticado
+  final String uid;
   const InicioPagina({super.key, required this.uid});
 
   @override
@@ -20,50 +27,93 @@ class _InicioPaginaState extends State<InicioPagina> {
   @override
   void initState() {
     super.initState();
-    obtenerNombre();
+    _obtenerNombre();
   }
 
-  Future<void> obtenerNombre() async {
-    final doc =
-        await FirebaseFirestore.instance
-            .collection('usuarios')
-            .doc(widget.uid)
-            .get();
-    if (doc.exists && doc.data()?['nombre'] != null) {
-      setState(() {
-        nombreUsuario = doc.data()!['nombre'];
-      });
-    }
+  Future<void> _obtenerNombre() async {
+    try {
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('usuarios')
+              .doc(widget.uid)
+              .get();
+      if (doc.exists && doc.data()?['nombre'] != null) {
+        setState(() => nombreUsuario = doc.data()!['nombre']);
+      }
+    } catch (_) {}
   }
+
+  String _initials() {
+    final parts = nombreUsuario.split(' ');
+    if (parts.isEmpty) return 'U';
+    if (parts.length == 1) return parts.first[0].toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+
+  final Color _primary = const Color(0xFF3F84D4);
+  final Color _accent = const Color(0xFF5A4FBF);
+  final Color _softBg = const Color(0xFFFBF6FA);
 
   @override
   Widget build(BuildContext context) {
-    final LoginController _loginController = LoginController();
-    final Color azulPrincipal = const Color(0xFF4090CD);
-    final Color azulOscuro = const Color(0xFF133476);
-    final Color azulClaro = const Color(0xFF69D9F7);
-
     return Scaffold(
+      backgroundColor: _softBg,
       appBar: AppBar(
-        backgroundColor: azulPrincipal,
-        elevation: 6,
-        title: const Text(
-          'Inicio',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-            letterSpacing: 1.2,
-            fontFamily: 'Montserrat',
-          ),
-        ),
+        elevation: 2,
+        backgroundColor: _primary,
+        centerTitle: true,
         leading: Builder(
           builder:
-              (context) => IconButton(
-                icon: const Icon(Icons.menu),
-                tooltip: 'Menú',
-                onPressed: () => Scaffold.of(context).openDrawer(),
+              (ctx) => Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    splashFactory: NoSplash.splashFactory,
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.menu_rounded, color: Colors.white),
+                    onPressed: () => Scaffold.of(ctx).openDrawer(),
+                    enableFeedback: false,
+                    splashRadius: 20,
+                  ),
+                ),
               ),
         ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.home, size: 20, color: Colors.white),
+            const SizedBox(width: 8),
+            Text(
+              'Inicio',
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                splashFactory: NoSplash.splashFactory,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.help_outline, color: Colors.white),
+                onPressed: () {},
+                enableFeedback: false,
+                splashRadius: 20,
+              ),
+            ),
+          ),
+        ],
       ),
       drawer: Drawer(
         child: Column(
@@ -71,53 +121,72 @@ class _InicioPaginaState extends State<InicioPagina> {
             DrawerHeader(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [azulPrincipal, azulClaro],
+                  colors: [_primary, _accent],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
               ),
-              child: const Center(
-                child: Text(
-                  'Opciones',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 28,
+                    backgroundColor: Colors.white24,
+                    child: Text(
+                      _initials(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      nombreUsuario,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             ListTile(
               leading: const Icon(Icons.person),
-              title: const Text(
-                'Perfil',
-                style: TextStyle(fontFamily: 'Montserrat'),
-              ),
+              title: const Text('Perfil'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const PerfilPagina()),
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text(
-                'Configuración',
-                style: TextStyle(fontFamily: 'Montserrat'),
-              ),
+              title: const Text('Configuración'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const ConfiguracionPagina(),
+                  ),
+                );
               },
             ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.logout),
-              title: const Text(
-                'Cerrar sesión',
-                style: TextStyle(fontFamily: 'Montserrat'),
-              ),
+              title: const Text('Cerrar sesión'),
               onTap: () async {
-                await _loginController.cerrarSesion();
                 Navigator.pop(context);
+                await FirebaseAuth.instance.signOut();
+                // navega al login (ajusta si tu widget de login tiene otro nombre)
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const Login()),
@@ -127,90 +196,192 @@ class _InicioPaginaState extends State<InicioPagina> {
           ],
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              azulClaro.withOpacity(0.18),
-              Colors.white,
-              azulPrincipal.withOpacity(0.10),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+      body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 32),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.person, color: Color(0xFF133476), size: 26),
-                const SizedBox(width: 8),
-                Text(
-                  'Bienvenido, $nombreUsuario',
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF133476),
-                    letterSpacing: 1.1,
+            // Header
+            Container(
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    _primary.withOpacity(0.95),
+                    _accent.withOpacity(0.95),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: _accent.withOpacity(0.12),
+                    blurRadius: 12,
+                    offset: const Offset(0, 8),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 24,
-                ),
-                crossAxisSpacing: 24,
-                mainAxisSpacing: 24,
+                ],
+              ),
+              child: Row(
                 children: [
-                  _ModuloCard(
-                    icon: Icons.monitor_heart,
-                    label: 'Seguimiento de Glucosa y Signos Vitales',
-                    color: azulPrincipal,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const SeguimientoPagina(),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.health_and_safety,
+                      color: _primary,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Bienvenido,',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white70,
+                            fontSize: 14,
                           ),
                         ),
+                        const SizedBox(height: 4),
+                        Text(
+                          nombreUsuario,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Registra y visualiza tus datos de salud fácilmente',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white70,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  _ModuloCard(
-                    icon: Icons.show_chart,
-                    label: 'Visualización de Historial',
-                    color: azulOscuro,
-                    onTap: () {
-                      // Navega a HistorialPagina cuando la crees
-                    },
-                  ),
-                  _ModuloCard(
-                    icon: Icons.folder_shared,
-                    label: 'Acceso a Expediente y Recursos',
-                    color: azulClaro,
-                    onTap: () {
-                      // Navega a ExpedientePagina cuando la crees
-                    },
-                  ),
-                  _ModuloCard(
-                    icon: Icons.school,
-                    label: 'Tutorial de Usuario',
-                    color: azulPrincipal,
-                    onTap: () {
-                      // Navega a TutorialPagina cuando la crees
-                    },
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white24,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.notifications_none,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Usuario',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white70,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
+
+            // Grid de módulos
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final itemWidth = (constraints.maxWidth - 28) / 2;
+                    final modules = [
+                      _ModuleDescriptor(
+                        Icons.monitor_heart,
+                        'Seguimiento',
+                        'Glucosa y signos',
+                        _primary,
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => RegistroGlucosaPagina(uid: widget.uid),
+                            ),
+                          );
+                        },
+                      ),
+                      _ModuleDescriptor(
+                        Icons.show_chart,
+                        'Historial',
+                        'Tendencias y gráficos',
+                        _accent,
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => HistorialPagina(uid: widget.uid),
+                            ),
+                          );
+                        },
+                      ),
+                      _ModuleDescriptor(
+                        Icons.folder_shared,
+                        'Expediente',
+                        'Acceso a recursos',
+                        Colors.teal,
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ExpedientePagina(uid: widget.uid),
+                            ),
+                          );
+                        },
+                      ),
+                      _ModuleDescriptor(
+                        Icons.school,
+                        'Tutorial',
+                        'Aprende a usar la app',
+                        Colors.deepPurple,
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const TutorialPagina(),
+                          ),
+                        ),
+                      ),
+                    ];
+                    return SingleChildScrollView(
+                      child: Wrap(
+                        spacing: 14,
+                        runSpacing: 14,
+                        children:
+                            modules.map((m) {
+                              return SizedBox(
+                                width: itemWidth,
+                                child: _ModuloCard(
+                                  icon: m.icon,
+                                  title: m.title,
+                                  subtitle: m.subtitle,
+                                  color: m.color,
+                                  onTap: m.onTap,
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
           ],
         ),
       ),
@@ -218,15 +389,31 @@ class _InicioPaginaState extends State<InicioPagina> {
   }
 }
 
-class _ModuloCard extends StatelessWidget {
+class _ModuleDescriptor {
   final IconData icon;
-  final String label;
+  final String title;
+  final String subtitle;
   final Color color;
   final VoidCallback onTap;
+  _ModuleDescriptor(
+    this.icon,
+    this.title,
+    this.subtitle,
+    this.color,
+    this.onTap,
+  );
+}
 
+class _ModuloCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
   const _ModuloCard({
     required this.icon,
-    required this.label,
+    required this.title,
+    required this.subtitle,
     required this.color,
     required this.onTap,
     super.key,
@@ -237,39 +424,59 @@ class _ModuloCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
         onTap: onTap,
         child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.15),
-                blurRadius: 16,
+                color: color.withOpacity(0.12),
+                blurRadius: 14,
                 offset: const Offset(0, 8),
               ),
             ],
-            border: Border.all(color: color.withOpacity(0.18), width: 2),
+            border: Border.all(color: color.withOpacity(0.06)),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 48, color: color),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: color,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    letterSpacing: 1.1,
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [color.withOpacity(0.12), color.withOpacity(0.06)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: color.withOpacity(0.06),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
+                child: Icon(icon, color: color, size: 36),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF133476),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(fontSize: 12, color: Colors.black54),
               ),
             ],
           ),
