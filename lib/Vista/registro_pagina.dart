@@ -213,6 +213,7 @@ class _RegistroPaginaState extends State<RegistroPagina> {
                             onPressed: _registrar,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: primary,
+                              foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -223,6 +224,7 @@ class _RegistroPaginaState extends State<RegistroPagina> {
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
+                                color: Colors.white,
                               ),
                             ),
                           ),

@@ -61,7 +61,14 @@ class PrivacidadPagina extends StatelessWidget {
               Center(
                 child: ElevatedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Aceptar'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    'Aceptar',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],

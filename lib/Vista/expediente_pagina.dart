@@ -119,10 +119,17 @@ class _ExpedientePaginaState extends State<ExpedientePagina> {
                               builder: (_) => ExportarPagina(uid: widget.uid),
                             ),
                           ),
-                      icon: const Icon(Icons.download_outlined),
-                      label: const Text('Exportar'),
+                      icon: const Icon(
+                        Icons.download_outlined,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        'Exportar',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _primary,
+                        foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

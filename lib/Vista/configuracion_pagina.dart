@@ -100,9 +100,17 @@ class _ConfiguracionPaginaState extends State<ConfiguracionPagina> {
                     const SizedBox(height: 12),
                     ElevatedButton.icon(
                       onPressed: _guardar,
-                      icon: const Icon(Icons.save_outlined),
-                      label: const Text('Guardar ajustes'),
+                      icon: const Icon(
+                        Icons.save_outlined,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        'Guardar ajustes',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),

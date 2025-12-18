@@ -107,7 +107,14 @@ class _SeguimientoPaginaState extends State<SeguimientoPagina> {
                             if (!mounted) return;
                             setState(() => _pendientes = c);
                           },
-                          child: const Text('Sincronizar ahora'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text(
+                            'Sincronizar ahora',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ],
                     ),

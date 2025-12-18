@@ -374,6 +374,7 @@ class _RegistroGlucosaPaginaState extends State<RegistroGlucosaPagina> {
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: _azulPrincipal,
+                            foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

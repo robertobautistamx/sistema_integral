@@ -207,6 +207,7 @@ class _LoginState extends State<Login> {
                                 onPressed: _loginCorreo,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: primary,
+                                  foregroundColor: Colors.white,
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 14,
                                   ),
@@ -219,6 +220,7 @@ class _LoginState extends State<Login> {
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),

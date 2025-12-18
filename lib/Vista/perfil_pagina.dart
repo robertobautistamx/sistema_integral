@@ -402,7 +402,14 @@ class _PerfilPaginaState extends State<PerfilPagina> {
                             ),
                             ElevatedButton(
                               onPressed: _guardar,
-                              child: const Text('Guardar'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text(
+                                'Guardar',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ],
                         ),

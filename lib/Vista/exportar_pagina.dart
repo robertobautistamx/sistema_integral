@@ -180,8 +180,18 @@ class _ExportarPaginaState extends State<ExportarPagina> {
                               _showPrintError(context, e);
                             }
                           },
-                          icon: const Icon(Icons.share_outlined),
-                          label: const Text('Compartir PDF'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                          ),
+                          icon: const Icon(
+                            Icons.share_outlined,
+                            color: Colors.white,
+                          ),
+                          label: const Text(
+                            'Compartir PDF',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                         const SizedBox(width: 12),
                         ElevatedButton.icon(
@@ -203,8 +213,18 @@ class _ExportarPaginaState extends State<ExportarPagina> {
                               _showPrintError(context, e);
                             }
                           },
-                          icon: const Icon(Icons.save_alt_outlined),
-                          label: const Text('Guardar / Imprimir'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                          ),
+                          icon: const Icon(
+                            Icons.save_alt_outlined,
+                            color: Colors.white,
+                          ),
+                          label: const Text(
+                            'Guardar / Imprimir',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
